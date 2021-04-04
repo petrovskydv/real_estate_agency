@@ -7,10 +7,11 @@ def create_owners(apps, schema_editor):
     Flat = apps.get_model('property', 'Flat')
     Owner = apps.get_model('property', 'Owner')
     for flat in Flat.objects.all():
-        Owner.objects.get_or_create(owner=flat.owner, defaults={
+        owner, created = Owner.objects.get_or_create(owner=flat.owner, defaults={
             'owners_phonenumber': flat.owners_phonenumber,
             'owner_pure_phone': flat.owner_pure_phone
         })
+        owner.flat.add(flat)
 
 
 class Migration(migrations.Migration):
