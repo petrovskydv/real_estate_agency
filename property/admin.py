@@ -14,7 +14,7 @@ class FlatAdmin(admin.ModelAdmin):
 
 class ClaimAdmin(admin.ModelAdmin):
     list_display = ('user', 'flat')
-    raw_id_fields = ('flat',)
+    raw_id_fields = ('user', 'flat')
 
 
 admin.site.register(Flat, FlatAdmin)
