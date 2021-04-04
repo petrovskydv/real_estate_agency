@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from .models import Flat
 from .models import Claim
+from .models import Flat
 
 
 class FlatAdmin(admin.ModelAdmin):
