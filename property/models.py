@@ -14,7 +14,7 @@ class Flat(models.Model):
         help_text='+79999999999'
     )
     created_at = models.DateTimeField(
-        "Когда создано объявление",
+        'Когда создано объявление',
         default=timezone.now,
         db_index=True)
 
@@ -34,7 +34,7 @@ class Flat(models.Model):
         'Адрес квартиры',
         help_text='ул. Подольских курсантов д.5 кв.4')
     floor = models.CharField(
-        "Этаж",
+        'Этаж',
         max_length=3,
         help_text='Первый этаж, последний этаж, пятый этаж')
 
@@ -58,12 +58,13 @@ class Flat(models.Model):
     new_building = models.NullBooleanField('Новостройка', db_index=True)
     liked_by = models.ManyToManyField(
         User,
-        related_name="liked_flats",
+        verbose_name='Кто лайкнул',
+        related_name='liked_flats',
         blank=True
     )
 
     def __str__(self):
-        return f"{self.town}, {self.address} ({self.price}р.)"
+        return f'{self.town}, {self.address} ({self.price}р.)'
 
     class Meta:
         verbose_name = 'Квартира'
@@ -83,8 +84,35 @@ class Claim(models.Model):
         on_delete=models.CASCADE,
         related_name='flat_claims'
     )
-    description = models.TextField("Текст жалобы", blank=True)
+    description = models.TextField('Текст жалобы', blank=True)
+
+    def __str__(self):
+        return f'{self.flat}, {self.user})'
 
     class Meta:
         verbose_name = 'Жалоба'
         verbose_name_plural = 'Жалобы'
+
+
+class Owner(models.Model):
+    owner = models.CharField('ФИО владельца', max_length=200, db_index=True)
+    owners_phonenumber = models.CharField('Номер владельца', max_length=20)
+    owner_pure_phone = PhoneNumberField(
+        'Нормализованный номер владельца',
+        null=True,
+        blank=True,
+        help_text='+79999999999'
+    )
+    flat = models.ManyToManyField(
+        Flat,
+        verbose_name='Квартиры в собственности',
+        related_name='owner_flats',
+        blank=True
+    )
+
+    def __str__(self):
+        return f'{self.owner}, {self.owner_pure_phone})'
+
+    class Meta:
+        verbose_name = 'Собственник'
+        verbose_name_plural = 'Собственники'
